@@ -1,59 +1,84 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!--
-      If you are serving your web app in a path other than the root, change the
-      href value below to reflect the base path you are serving from.
-
-      The path provided below has to start and end with a slash "/" in order for
-      it to work correctly.
-
-      For more details:
-      * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-      This is a placeholder for base href that will be replaced by the value of
-      the `--base-href` argument provided to `flutter build`.
-    -->
-    <base href="$FLUTTER_BASE_HREF">
-
-    <meta charset="UTF-8">
-    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-    <meta content="A new Flutter project." name="description">
-
-    <!-- iOS meta tags & icons -->
-    <meta content="yes" name="apple-mobile-web-app-capable">
-    <meta content="black" name="apple-mobile-web-app-status-bar-style">
-    <meta content="untitled1" name="apple-mobile-web-app-title">
-    <link href="icons/Icon-192.png" rel="apple-touch-icon">
-
-    <!-- Favicon -->
-    <link href="favicon.png" rel="icon" type="image/png"/>
-
-    <title>untitled1</title>
-    <link href="manifest.json" rel="manifest">
-
-    <script>
-        // The value below is injected by flutter build, do not touch.
-        var serviceWorkerVersion = null;
-    </script>
-    <!-- This script adds the flutter initialization JS code -->
-    <script defer src="flutter.js"></script>
+    <title>ToDoList App</title>
+    <style>
+        /* CSS styles for the app */
+        .container {
+          max-width: 400px;
+          margin: 0 auto;
+          padding: 20px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+        }
+        .item {
+          margin-bottom: 10px;
+        }
+        .item input[type="checkbox"] {
+          margin-right: 10px;
+        }
+        .item span {
+          text-decoration: none;
+        }
+        .item.completed span {
+          text-decoration: line-through;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>ToDoList App</h1>
+    <input type="text" id="taskInput" placeholder="Enter a task">
+    <button onclick="addTask()">Add Task</button>
+    <div id="taskList"></div>
+</div>
+
 <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
+    // JavaScript code for the app
+    let tasks = [];
+
+    function addTask() {
+      const taskInput = document.getElementById('taskInput');
+      const task = taskInput.value.trim();
+      if (task !== '') {
+        tasks.push(task);
+        taskInput.value = '';
+        renderTasks();
+      }
+    }
+
+    function removeTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+    }
+
+    function renderTasks() {
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const item = document.createElement('div');
+        item.classList.add('item');
+        if (index % 2 === 0) {
+          item.classList.add('even');
         }
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.addEventListener('change', () => {
+          item.classList.toggle('completed');
+        });
+        const span = document.createElement('span');
+        span.textContent = task;
+        const button = document.createElement('button');
+        button.textContent = 'Remove';
+        button.addEventListener('click', () => {
+          removeTask(index);
+        });
+        item.appendChild(checkbox);
+        item.appendChild(span);
+        item.appendChild(button);
+        taskList.appendChild(item);
       });
-    });
+    }
 </script>
 </body>
 </html>
